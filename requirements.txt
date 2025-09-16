@@ -1,0 +1,8 @@
+Flask
+opencv-python
+numpy
+scikit-image
+scikit-learn
+pillow
+pandas
+tqdm

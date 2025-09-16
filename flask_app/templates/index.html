@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>StoneMatch — Câmera & Pareamento</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header><h1>StoneMatch — Câmera ao vivo & Pareamento</h1></header>
+
+  <main>
+    <section class="panel">
+      <div class="left">
+        <h2>Câmera</h2>
+        <img id="cam" src="/video_feed" alt="camera" />
+        <div class="controls">
+          <label>Top-K: <input id="topk" type="number" value="5" min="1" max="20"></label>
+          <button id="btn-capture">Capturar & Parear</button>
+        </div>
+        <div class="hint">
+          Antes: coloque imagens do lote em <code>data/raw</code> e clique:
+          <button id="btn-ingest">Processar & Indexar</button>
+          <span id="ingest-status"></span>
+        </div>
+      </div>
+
+      <div class="right">
+        <h2>Resultados</h2>
+        <div id="results" class="grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><small>100% local. Padronize luz, distância e orientação.</small></footer>
+  <script src="/static/main.js"></script>
+</body>
+</html>
