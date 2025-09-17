@@ -1,9 +1,7 @@
 import threading, time, sys, os, base64
 from datetime import datetime
 from pathlib import Path
-from typing import List, Tuple
 from flask import Flask, render_template, Response, jsonify, send_from_directory, request
-import cv2
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path: sys.path.insert(0, str(ROOT_DIR))
@@ -48,7 +46,7 @@ def upload():
     data = request.json["image"]
     image_data = data.split(",")[1]
 
-    with open("captura.png", "wb") as f:
+    with open("data/uploads/imagemCapturada.png", "wb") as f:
         f.write(base64.b64decode(image_data))
 
     return jsonify({"status": "ok", "message": "Imagem recebida com sucesso"})
