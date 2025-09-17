@@ -1,0 +1,10 @@
+/* Cores padrões para o projeto Bela Pedra  */
+:root {
+    --cinza: #808080;        
+    --grafite: #2F4F4F;      
+    --dourado: #d6b80d;      
+
+    --cinza-hover: #6e6e6e;      
+    --grafite-hover: #1f3b3b;   
+    --dourado-hover: #c1a900;    
+}

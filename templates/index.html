@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Stone Matcher</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<h1>Stone Matcher</h1>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='root.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='reset.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Stone Matcher</h1>
 
-<!-- Card do formulário -->
-<div class="card">
-    <form method="POST" enctype="multipart/form-data" id="uploadForm">
-        <label for="image" class="custom-file-upload">📎 Selecionar Imagem</label>
-        <input type="file" id="image" name="image" accept="image/*" required
-               onchange="document.getElementById('uploadForm').submit()">
-    </form>
-</div>
+    <!-- Card do formulário -->
+    <div class="card">
+      <form method="POST" enctype="multipart/form-data" id="uploadForm">
+        <label for="image" class="custom-file-upload"
+          >📎 Selecionar Imagem</label
+        >
+        <input
+          type="file"
+          id="image"
+          name="image"
+          accept="image/*"
+          required
+          onchange="document.getElementById('uploadForm').submit()"
+        />
+      </form>
+    </div>
 
-{% if annotated %}
-<div class="card results">
-    <h2>Imagem Processada</h2>
-    <img src="{{ annotated }}" alt="Imagem anotada">
+    {% if annotated %}
+    <div class="card results">
+      <h2>Imagem Processada</h2>
+      <img src="{{ annotated }}" alt="Imagem anotada" />
 
-    <h2>Resultados</h2>
-    <a href="/download_csv" class="btn-download">⬇ Baixar CSV</a>
+      <h2>Resultados</h2>
+      <a href="/download_csv" class="btn-download">⬇ Baixar CSV</a>
 
-    <!-- Tabela de resultados -->
-    {{ results.to_html(classes="styled-table", index=False) | safe }}
-</div>
-{% endif %}
-</body>
+      <!-- Tabela de resultados -->
+      {{ results.to_html(classes="styled-table", index=False) | safe }}
+    </div>
+    {% endif %}
+  </body>
 </html>
