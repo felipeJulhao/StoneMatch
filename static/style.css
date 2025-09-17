@@ -1,0 +1,113 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f2f5;
+    color: #333;
+    padding: 30px;
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+/* Botão customizado para file upload */
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 12px 24px;
+    background: #2c7be5;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.3s ease;
+}
+
+.custom-file-upload:hover {
+    background: #1a5bb8;
+}
+
+/* Card container */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+form {
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.results {
+    text-align: center;
+}
+
+img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+}
+
+.btn-download {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #27ae60;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    margin: 20px 0;
+    transition: background 0.3s ease;
+}
+
+.btn-download:hover {
+    background: #1e874b;
+}
+
+/* Tabela estilizada */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+    text-align: left;
+}
+
+th, td {
+    padding: 12px 15px;
+}
+
+th {
+    background: #2c7be5;
+    color: white;
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+tr:hover {
+    background: #eef4ff;
+}
