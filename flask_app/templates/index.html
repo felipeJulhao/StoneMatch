@@ -13,10 +13,11 @@
     <section class="panel">
       <div class="left">
         <h2>Câmera</h2>
-        <img id="cam" src="/video_feed" alt="camera" />
+       <video id="video" autoplay playsinline width="640" height="480"></video>
         <div class="controls">
           <label>Top-K: <input id="topk" type="number" value="5" min="1" max="20"></label>
-          <button id="btn-capture">Capturar & Parear</button>
+          <button id="capture">Capturar & Parear</button>
+            <button id="btn-inserir">Inserir arquivo de imagem</button>
         </div>
         <div class="hint">
           Antes: coloque imagens do lote em <code>data/raw</code> e clique:
