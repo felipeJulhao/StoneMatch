@@ -2,15 +2,20 @@ import cv2
 import numpy as np
 import os
 
+from .corte_por_mascara import separar_objetos
+
+OUTPUT_FOLDER = "app/funcoes_utilitarias/segmentacao"
+
 ## uso -> segmentar_imagem("caminho_completo_arquivo")
 ## A função segmenta a imagem separando os objetos do fundo e realiza
 def segmentar_imagem(image_path):
+    
     image = cv2.imread(image_path)
-    output_folder = "app/funcoes_utilitarias/segmentacao"
-    os.makedirs(output_folder, exist_ok=True)
-
-    # Carregar imagem e converter para cinza
-    image = cv2.imread("pedras.jpg")
+    if image is None:
+        print(f"Não foi possível carregar a imagem {image_path}")
+        return False
+    
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Filtro passa baixa, para suavizar imagem
@@ -49,11 +54,11 @@ def segmentar_imagem(image_path):
     result = cv2.bitwise_and(image, image, mask=mask)
 
     # Salvar resultado
-    output_path = os.path.join(output_folder, f"segmentado.png")
+    output_path = os.path.join(OUTPUT_FOLDER, f"segmentado.png")
     cv2.imwrite(output_path, result)
 
-    segmentar_imagem(output_path)
-    os.remove(output_path) # Remove a Imagem segmentada
+    separar_objetos(output_path)
+    #os.remove(output_path) # Remove a Imagem segmentada
     return True
 
 
