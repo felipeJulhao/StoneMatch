@@ -1,0 +1,21 @@
+# Diretórios e arquivos
+gallery_dir: "./gallery"
+index_path: "./outputs/index.npy"
+names_path: "./outputs/names.json"
+clusters_path: "./outputs/clusters.json"
+
+# Parâmetros do DBSCAN (opcional, se ainda usar clustering)
+dbscan_eps: 0.32
+dbscan_min_samples: 2
+
+# Detecção de pedras na imagem grande
+min_width: 30
+min_height: 30
+blur_ksize: 5
+
+# Pesos da similaridade
+# α = peso para cor, β = peso para forma, γ = peso para embedding da ResNet
+weights:
+  alpha: 0.33   # cor
+  beta: 0.33    # forma
+  gamma: 0.34   # rede

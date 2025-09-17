@@ -1,0 +1,360 @@
+{
+  "0": [
+    {
+      "file": "marrons\\stone_10.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_11.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_14.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_15.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_16.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_18.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_19.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_20.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_21.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_22.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_23.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_24.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_25.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_26.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_28.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_29.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_30.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_31.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_32.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_33.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_34.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_35.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_4.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_5.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_6.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_7.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_8.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_9.jpg",
+      "label_manual": "marrons"
+    }
+  ],
+  "-1": [
+    {
+      "file": "marrons\\stone_13.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_17.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "marrons\\stone_27.jpg",
+      "label_manual": "marrons"
+    },
+    {
+      "file": "verdes\\stone_11.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_39.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_5.jpg",
+      "label_manual": "verdes"
+    }
+  ],
+  "1": [
+    {
+      "file": "verdes\\stone_10.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_12.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_13.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_14.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_15.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_16.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_17.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_18.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_19.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_21.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_22.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_23.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_24.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_25.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_27.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_28.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_29.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_30.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_31.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_32.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_33.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_34.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_36.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_37.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_38.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_40.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_41.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_42.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_43.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_44.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_45.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_46.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_47.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_48.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_49.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_50.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_51.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_52.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_53.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_54.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_55.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_56.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_57.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_58.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_59.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_6.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_60.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_62.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_63.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_64.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_65.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_7.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_8.jpg",
+      "label_manual": "verdes"
+    },
+    {
+      "file": "verdes\\stone_9.jpg",
+      "label_manual": "verdes"
+    }
+  ]
+}

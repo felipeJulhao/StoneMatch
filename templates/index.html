@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Stone Matcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background: #f7f7f7;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+        }
+        input[type=file] {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background: #2c7be5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1a5bb8;
+        }
+        img {
+            max-width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        .btn-download {
+            display: inline-block;
+            padding: 10px 15px;
+            background: green;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 15px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 14px;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stone Matcher</h1>
+
+    <!-- Formulário de upload -->
+    <form method="POST" enctype="multipart/form-data">
+        <label for="image">Selecione uma imagem de pedras:</label><br>
+        <input type="file" id="image" name="image" accept="image/*" required><br>
+        <button type="submit">Anexar e Processar</button>
+    </form>
+
+    {% if annotated %}
+        <h2>Imagem Processada</h2>
+        <img src="{{ annotated }}" alt="Imagem anotada">
+
+        <h2>Resultados</h2>
+        <a href="/download_csv" class="btn-download">Baixar CSV</a>
+
+        <!-- Tabela de resultados -->
+        {{ results.to_html(classes="table", index=False) | safe }}
+    {% endif %}
+</body>
+</html>
