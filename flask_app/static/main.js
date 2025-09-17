@@ -25,13 +25,24 @@ async function sendImageToServer(imageData) {
             body: JSON.stringify({ image: imageData })
         });
         const data = await response.json();
-        console.log(data);
-        resultsDiv.textContent = data.message || JSON.stringify(data, null, 2);
+
+        resultsDiv.innerHTML = '';
+
+        const img = document.createElement("img");
+        img.src = data.result_image;
+        img.alt = "Imagem Processada";
+        img.width = 320;
+        img.style.border = "1px solid #ccc";
+        img.style.margin = "5px";
+
+        resultsDiv.appendChild(img);
+
     } catch (err) {
         console.error("Erro no upload:", err);
-        resultsDiv.textContent = "Erro ao enviar imagem.";
+        resultsDiv.textContent = "Erro ao enviar/processar imagem.";
     }
 }
+
 
 // Evento de captura da câmera
 captureBtn.addEventListener("click", () => {
