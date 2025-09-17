@@ -1,0 +1,6 @@
+crop,best_match,label_manual,distance,top5
+crop_001.jpg,marrons\stone_31.jpg,marrons,0.631,marrons\stone_31.jpg:0.631;marrons\stone_11.jpg:0.891;marrons\stone_30.jpg:1.059;marrons\stone_21.jpg:1.361;marrons\stone_25.jpg:1.386
+crop_002.jpg,marrons\stone_18.jpg,marrons,1.383,marrons\stone_18.jpg:1.383;marrons\stone_9.jpg:2.126;marrons\stone_27.jpg:3.054;marrons\stone_32.jpg:3.154;marrons\stone_5.jpg:3.179
+crop_003.jpg,marrons\stone_4.jpg,marrons,1.245,marrons\stone_4.jpg:1.245;marrons\stone_7.jpg:1.574;marrons\stone_23.jpg:2.069;marrons\stone_19.jpg:2.290;marrons\stone_10.jpg:2.352
+crop_004.jpg,marrons\stone_10.jpg,marrons,1.418,marrons\stone_10.jpg:1.418;marrons\stone_19.jpg:1.423;marrons\stone_14.jpg:1.447;marrons\stone_23.jpg:1.500;marrons\stone_4.jpg:2.951
+crop_005.jpg,verdes\stone_63.jpg,verdes,0.827,verdes\stone_63.jpg:0.827;verdes\stone_40.jpg:1.004;verdes\stone_33.jpg:1.071;verdes\stone_39.jpg:1.289;verdes\stone_21.jpg:1.340
