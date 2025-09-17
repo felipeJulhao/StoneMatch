@@ -49,7 +49,14 @@ def upload():
     with open("data/uploads/imagemCapturada.png", "wb") as f:
         f.write(base64.b64decode(image_data))
 
-    return jsonify({"status": "ok", "message": "Imagem recebida com sucesso"})
+    with open("data/uploads/imagemCapturada.png", "rb") as f:
+        processed_b64 = base64.b64encode(f.read()).decode("utf-8")
+
+    return jsonify({
+        "status": "ok",
+        "message": "Imagem processada com sucesso",
+        "result_image": f"data:image/png;base64,{processed_b64}"
+    })
 
 if __name__ == "__main__":
     try:
