@@ -6,4 +6,6 @@ scikit-learn
 pillow
 pandas
 tqdm
-1
+torchvision
+torch
+PyYAML

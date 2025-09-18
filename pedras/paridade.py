@@ -44,7 +44,7 @@ def process_image(path):
 
 def processar():
     # --- Carregar várias imagens ---
-    image_dir = "pedras_separadas"  # coloque o nome da pasta aqui
+    image_dir = "C:/Users/igorb/Desktop/CodeCon/pedras/pedras_separadas"  # coloque o nome da pasta aqui
     image_paths = glob.glob(os.path.join(image_dir, "*.jpg"))
 
     all_features = []
@@ -84,6 +84,3 @@ def processar():
 
         plt.suptitle(f"Par mais semelhante (distância = {min_dist:.2f})")
         plt.show()
-        
-
-

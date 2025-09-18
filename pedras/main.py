@@ -10,7 +10,7 @@ output_folder = "pedras_separadas"
 os.makedirs(output_folder, exist_ok=True)
 
 # Carregar imagem e converter para cinza
-image = cv2.imread("pedras.jpg")
+image = cv2.imread(input_image)   
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 blur = cv2.GaussianBlur(gray, (5,5), 0)
