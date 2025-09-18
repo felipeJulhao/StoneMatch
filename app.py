@@ -13,7 +13,7 @@ import pandas as pd
 # --------------------------
 with open("config.yaml", "r", encoding="utf-8") as f:
     CFG = yaml.safe_load(f)
-
+ 
 # --------------------------
 # Carregar galeria (features já salvas pelo build_index.py)
 # --------------------------
@@ -85,6 +85,8 @@ def detectar_grupo(np_img):
     h_mean = np.mean(hsv[:,:,0])  # matiz médio
     if 35 <= h_mean <= 85:  # faixa aproximada de verde
         return "verdes"
+    if 125 <= h_mean <= 150:  # faixa aproximada de roxo
+        return "roxos"
     else:
         return "marrons"
 

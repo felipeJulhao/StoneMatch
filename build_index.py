@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as T
 from torchvision import models
+from sklearn.cluster import DBSCAN
 
 # --------------------------
 # Carregar config
@@ -12,14 +13,11 @@ with open("config.yaml", "r", encoding="utf-8") as f:
     CFG = yaml.safe_load(f)
 
 # --------------------------
-# Definir device
+# Modelo ResNet50
 # --------------------------
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print("Device:", device)
 
-# --------------------------
-# Modelo backbone (ResNet50)
-# --------------------------
 backbone = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
 backbone.fc = nn.Identity()
 backbone.eval().to(device)
@@ -44,7 +42,7 @@ def embed_color_shape(np_img):
     hist = cv2.calcHist([hsv], [0,1,2], None, [8,8,8], [0,180,0,256,0,256])
     hist = cv2.normalize(hist, hist).flatten()
 
-    # Forma (Momentos de Hu normalizados)
+    # Forma (Momentos de Hu)
     gray = cv2.cvtColor(np_img, cv2.COLOR_RGB2GRAY)
     _, th = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
     cnts, _ = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -91,10 +89,32 @@ if not data:
     raise SystemExit("Nenhuma imagem encontrada na galeria.")
 
 # --------------------------
-# Salvar index
+# Salvar index principal
 # --------------------------
 os.makedirs("outputs", exist_ok=True)
 with open(CFG["names_path"], "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
 print(f"Indexado: {len(data)} imagens")
+
+# --------------------------
+# (Opcional) Agrupamento com DBSCAN
+# --------------------------
+try:
+    emb = np.vstack([np.array(d["resnet"], dtype="float32") for d in data])
+    db = DBSCAN(eps=CFG["dbscan_eps"], min_samples=CFG["dbscan_min_samples"], metric="euclidean").fit(emb)
+    labels = db.labels_
+
+    clusters = {}
+    for i, lab in enumerate(labels):
+        clusters.setdefault(int(lab), []).append(data[i])
+
+    with open(CFG["clusters_path"], "w", encoding="utf-8") as f:
+        json.dump(clusters, f, ensure_ascii=False, indent=2)
+
+    print("Clusters salvos em:", CFG["clusters_path"])
+    for k,v in clusters.items():
+        print("Cluster", k, "=>", len(v), "itens")
+
+except Exception as e:
+    print("DBSCAN não rodou:", e)
