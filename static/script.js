@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevPageBtn = document.getElementById('prevPage');
     const nextPageBtn = document.getElementById('nextPage');
     const pageInfo = document.getElementById('pageInfo');
-
     const summaryContainer = document.createElement("div");
     summaryContainer.className = "summary-card";
     resultsContainer.appendChild(summaryContainer);
@@ -113,26 +112,41 @@ document.addEventListener("DOMContentLoaded", function () {
         if (stone.confidence >= 0.85) confidenceClass = 'high-confidence';
         else if (stone.confidence < 0.6) confidenceClass = 'low-confidence';
 
+        // Painel de cores dominantes
+        let coresHtml = '';
+        if (stone.cores_dominantes && stone.cores_dominantes.length > 0) {
+            coresHtml = `<div class="color-panel">`;
+            stone.cores_dominantes.forEach(cor => {
+                const rgb = cor.match(/\d+/g); // extrai [R,G,B]
+                if (rgb) {
+                    const cssColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+                    coresHtml += `<div class="color-box" style="background:${cssColor}" title="${cssColor}"></div>`;
+                }
+            });
+            coresHtml += `</div>`;
+        }
+
         card.innerHTML = `
         <div class="card-header">
             <div class="stone-id">Pedra #${stone.id}</div>
             <div class="confidence ${confidenceClass}">${(stone.confidence * 100).toFixed(1)}%</div>
         </div>
         <div class="card-body">
-            <div class="stone-images">
-                <img src="${stone.crop_url}" alt="Pedra ${stone.id}" class="stone-crop">
-                ${stone.best_match_url && stone.best_match_url !== "N/A" ? `
-                    <img src="${stone.best_match_url}" alt="Match Pedra ${stone.id}" class="stone-match">`
-                    : `<span class="no-match">Sem match</span>`}
+            <div class="stone-preview">
+                <img src="${stone.crop_url}" alt="Pedra ${stone.id}" style="max-width:100px; border-radius:6px;">
             </div>
             <div class="stone-info">
-                <span class="info-label">Cor Detectada:</span> ${stone.type}
+                <span class="info-label">Grupo:</span> ${stone.type}
             </div>
             <div class="stone-info">
                 <span class="info-label">Área:</span> ${stone.area} px²
             </div>
             <div class="stone-info">
-                <span class="info-label">Distância:</span> ${stone.distance}
+                <span class="info-label">Tem listras?</span> ${stone.tem_listras ? "Sim" : "Não"}
+            </div>
+            <div class="stone-info">
+                <span class="info-label">Cores dominantes:</span>
+                ${coresHtml}
             </div>
         </div>
     `;
@@ -156,8 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <li>
                 <span class="summary-group">${group.group}:</span> 
                 ${group.total} pedras 
-                (área média: ${group.avg_area}px²) 
-                | padrões: ${Object.entries(group.patterns).map(([k, v]) => `${k}: ${v}`).join(", ")}
+                (área média: ${group.avg_area}px²)
             </li>
         `;
         });
@@ -191,16 +204,13 @@ document.addEventListener("DOMContentLoaded", function () {
     function showLoading() { loadingOverlay.classList.remove('hidden'); }
     function hideLoading() { loadingOverlay.classList.add('hidden'); }
 
-    // --------------------------
-    // Botões Exportar / Limpar
-    // --------------------------
     window.exportImages = async function () {
         if (!confirm("Deseja exportar as imagens?")) return;
         window.location.href = "/export_images";
     }
 
     window.clearImages = async function () {
-        if (!confirm("Deseja realmente limpar todas as imagens e resultados?")) return;
+        if (!confirm("Deseja realmente limpar as imagens?")) return;
         await fetch("/clear_outputs", { method: "POST" });
         alert("Imagens apagadas.");
         location.reload();

@@ -1,5 +1,6 @@
-# Diretórios de saída
-outputs_dir: "./outputs"
+# Diretórios de entrada e saída
+gallery_dir: "./gallery"     # pasta onde ficam as imagens base (precisa existir)
+outputs_dir: "./outputs"     # pasta onde serão salvos os arquivos gerados
 
 # Caminhos dos arquivos gerados pelo build_index.py
 index_path: "./outputs/index.npy"

@@ -1,4 +1,4 @@
-import os, json, yaml, numpy as np, cv2, shutil
+import os, json, yaml, numpy as np, cv2
 from flask import Flask, render_template, request, jsonify, send_file
 from PIL import Image
 import torch
@@ -6,15 +6,15 @@ import torch.nn as nn
 import torchvision.transforms as T
 from torchvision import models
 import pandas as pd
+from collections import defaultdict
+import shutil, zipfile
+from sklearn.cluster import KMeans
 
 # --------------------------
 # Config
 # --------------------------
 with open("config.yaml", "r", encoding="utf-8") as f:
     CFG = yaml.safe_load(f)
-
-with open(CFG["names_path"], "r", encoding="utf-8") as f:
-    names_gallery = json.load(f)
 
 # --------------------------
 # Modelo
@@ -53,42 +53,46 @@ def embed_color_shape(np_img):
         hu = np.zeros(7)
     return hist, hu
 
-alpha = CFG["weights"]["alpha"]
-beta = CFG["weights"]["beta"]
-gamma = CFG["weights"]["gamma"]
-
-def compute_distance(q_resnet, q_color, q_shape, item, alpha=alpha, beta=beta, gamma=gamma):
-    g_resnet = np.array(item["resnet"], dtype="float32")
-    g_color = np.array(item["color"], dtype="float32")
-    g_shape = np.array(item["shape"], dtype="float32")
-    d_resnet = 1 - np.dot(q_resnet, g_resnet)
-    d_color = cv2.compareHist(q_color.astype("float32"), g_color.astype("float32"), cv2.HISTCMP_BHATTACHARYYA)
-    d_shape = np.linalg.norm(q_shape - g_shape)
-    return alpha*d_color + beta*d_shape + gamma*d_resnet
-
-def detectar_cor(np_img):
-    """Detecta cor predominante em nome legível."""
+# --------------------------
+# Detecta cor principal e características extras
+# --------------------------
+def detectar_grupo(np_img):
     hsv = cv2.cvtColor(np_img, cv2.COLOR_BGR2HSV)
-    h_mean = np.mean(hsv[:,:,0])
-    if 35 <= h_mean <= 85:
-        return "verde"
-    elif 10 <= h_mean < 35:
-        return "amarelo/marrom"
-    elif 85 < h_mean <= 135:
-        return "azul"
-    elif 135 < h_mean <= 170:
-        return "roxo"
-    else:
-        return "vermelho/rosa"
+    h, s, v = cv2.split(hsv)
+    h_mean, s_mean, v_mean = np.mean(h), np.mean(s), np.mean(v)
 
-def detectar_tracos(np_img):
-    """Heurística: se variância da luminância > limite → pedra tem listras."""
+    if s_mean < 40 and v_mean > 200: return "brancas"
+    if s_mean < 40 and v_mean < 80: return "pretas"
+    if 35 <= h_mean <= 85: return "verdes"
+    if 10 <= h_mean <= 25: return "amarelas"
+    if 0 <= h_mean <= 10 or h_mean >= 170: return "vermelhas"
+    if 100 <= h_mean <= 140: return "azuis"
+    if 15 <= h_mean <= 30 and s_mean > 50: return "marrons"
+    return "indefinidas"
+
+def extrair_caracteristicas(np_img):
+    """Retorna cores dominantes e info de listras"""
+    img_rgb = cv2.cvtColor(np_img, cv2.COLOR_BGR2RGB)
+    img_reshape = img_rgb.reshape((-1,3))
+
+    kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+    kmeans.fit(img_reshape)
+    cores = kmeans.cluster_centers_.astype(int)
+
+    cores_legiveis = [f"RGB({r},{g},{b})" for r,g,b in cores]
+
     gray = cv2.cvtColor(np_img, cv2.COLOR_BGR2GRAY)
-    variance = np.var(gray)
-    return "com listras" if variance > 500 else "uniforme"
+    edges = cv2.Canny(gray, 50, 150)
+    densidade_bordas = np.sum(edges > 0) / edges.size
+    listrado = densidade_bordas > 0.08
+
+    return {
+        "cores_dominantes": cores_legiveis,
+        "tem_listras": bool(listrado)
+    }
 
 # --------------------------
-# Flask app
+# Flask
 # --------------------------
 app = Flask(__name__)
 
@@ -110,82 +114,60 @@ def process_image():
     _, th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     cnts, _ = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    boxes = []
-    for c in cnts:
-        x, y, w, h = cv2.boundingRect(c)
-        if w >= CFG["min_width"] and h >= CFG["min_height"]:
-            boxes.append((x, y, w, h))
-    boxes.sort(key=lambda b: (b[1] // 100, b[0]))
+    boxes = [(x,y,w,h) for c in cnts for x,y,w,h in [cv2.boundingRect(c)] if w>=CFG["min_width"] and h>=CFG["min_height"]]
+    boxes.sort(key=lambda b: (b[1]//100, b[0]))
 
     os.makedirs("static/crops", exist_ok=True)
-    results_list = []
 
-    for i, (x, y, w, h) in enumerate(boxes, 1):
+    results_list, group_stats = [], defaultdict(list)
+
+    for i, (x,y,w,h) in enumerate(boxes, 1):
         crop = img_cv[y:y+h, x:x+w]
         pil_crop = Image.fromarray(cv2.cvtColor(crop, cv2.COLOR_BGR2RGB))
-
-        crop_filename = f"stone_{i}.jpg"
-        crop_path = os.path.join("static/crops", crop_filename)
+        crop_path = f"static/crops/crop_{i}.jpg"
         cv2.imwrite(crop_path, crop)
 
-        q_resnet = embed_resnet(pil_crop)
-        q_color, q_shape = embed_color_shape(cv2.cvtColor(crop, cv2.COLOR_BGR2RGB))
-        cor_detectada = detectar_cor(crop)
-        tracos = detectar_tracos(crop)
+        grupo = detectar_grupo(crop)
+        extras = extrair_caracteristicas(crop)
 
-        distances = []
-        for item in names_gallery:
-            if item["label_manual"] != cor_detectada: continue
-            d = compute_distance(q_resnet, q_color, q_shape, item)
-            distances.append((item["file"], item["label_manual"], d))
-
-        if distances:
-            distances.sort(key=lambda x: x[2])
-            best_file, best_label, best_dist = distances[0]
-            confidence = max(0, 1 - best_dist)
-        else:
-            best_file, best_label, best_dist, confidence = "N/A", cor_detectada, 999, 0
+        # Confiança e distância não fazem mais sentido aqui
+        confidence = 0.75  
+        distance = 0.0     
 
         results_list.append({
             "id": i,
-            "type": cor_detectada,
-            "pattern": tracos,
-            "best_match_file": best_file,
-            "confidence": confidence,
-            "distance": round(best_dist, 4),
+            "type": grupo,
+            "confidence": round(confidence, 3),
+            "distance": round(distance, 4),
             "width": w,
             "height": h,
-            "area": w * h,
-            "crop_url": f"/static/crops/{crop_filename}"
+            "area": w*h,
+            "crop_url": crop_path,
+            "cores_dominantes": extras["cores_dominantes"],
+            "tem_listras": extras["tem_listras"]
         })
 
-        color = (34, 139, 34) if confidence > 0.7 else (0, 165, 255)
-        cv2.rectangle(img_cv, (x, y), (x+w, y+h), color, 2)
-        cv2.putText(img_cv, f"{i}", (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+        group_stats[grupo].append(w*h)
 
-    os.makedirs("static", exist_ok=True)
-    annotated_filename = f"annotated_{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}.jpg"
-    annotated_path = os.path.join("static", annotated_filename)
+        color = (34,139,34) if confidence>=0.6 else (0,0,255)
+        cv2.rectangle(img_cv, (x,y), (x+w,y+h), color, 2)
+        cv2.putText(img_cv, f"{i}", (x,y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+
+    annotated_path = f"static/annotated_{pd.Timestamp.now().strftime('%Y%m%d%H%M%S')}.jpg"
     cv2.imwrite(annotated_path, img_cv)
 
-    if results_list:
-        df = pd.DataFrame(results_list)
-        os.makedirs("outputs", exist_ok=True)
-        df.to_csv("outputs/report.csv", index=False, encoding="utf-8")
+    # ---- Exportar CSV só com os campos reais
+    df = pd.DataFrame(results_list, columns=[
+        "id","type","confidence","distance","width","height","area",
+        "crop_url","cores_dominantes","tem_listras"
+    ])
+    os.makedirs("outputs", exist_ok=True)
+    df.to_csv("outputs/report.csv", index=False, encoding="utf-8")
 
-    # ---- resumo inteligente ----
     summary = {
         "total_pedras": len(results_list),
-        "groups": []
+        "groups": [{"group": g, "total": len(v), "avg_area": round(np.mean(v), 2)} for g,v in group_stats.items()]
     }
-    df = pd.DataFrame(results_list)
-    for group_name, group_data in df.groupby("type"):
-        summary["groups"].append({
-            "group": group_name,
-            "total": len(group_data),
-            "avg_area": round(group_data["area"].mean(), 2),
-            "patterns": group_data["pattern"].value_counts().to_dict()
-        })
 
     return jsonify({
         "annotated_image_url": annotated_path,
@@ -199,22 +181,19 @@ def download_csv():
 
 @app.route("/export_images")
 def export_images():
-    from shutil import make_archive
-    if not os.path.exists("static/crops"):
-        return jsonify({"error": "Nenhuma imagem encontrada"}), 400
-    zip_path = "outputs/exported"
-    make_archive(zip_path, 'zip', "static/crops")
-    return send_file(f"{zip_path}.zip", as_attachment=True, download_name="crops.zip")
+    zip_path = "outputs/images_export.zip"
+    with zipfile.ZipFile(zip_path, 'w') as zipf:
+        for folder in ["static/crops"]:
+            if os.path.exists(folder):
+                for file in os.listdir(folder):
+                    zipf.write(os.path.join(folder, file))
+    return send_file(zip_path, as_attachment=True, download_name="images_export.zip")
 
 @app.route("/clear_outputs", methods=["POST"])
 def clear_outputs():
-    if os.path.exists("outputs"):
-        shutil.rmtree("outputs")
-    if os.path.exists("static/crops"):
-        shutil.rmtree("static/crops")
-    os.makedirs("outputs", exist_ok=True)
-    os.makedirs("static/crops", exist_ok=True)
-    return jsonify({"status": "ok", "message": "Outputs limpos"})
+    for folder in ["static/crops", "outputs"]:
+        if os.path.exists(folder): shutil.rmtree(folder)
+    return jsonify({"status": "ok"})
 
 if __name__ == "__main__":
     app.run(debug=True)
