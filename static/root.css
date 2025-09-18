@@ -1,0 +1,26 @@
+/* Variáveis de cores do projeto Bela Pedra */
+:root {
+    --cor-dourado: #AC873A;
+    --cor-dourado-escuro: #997830;
+    --cor-grafite: #363435;
+    --cor-branca: #FFFFFF;
+    --cor-fundo: #F5F5F5;
+    --cor-verde: #27ae60;
+    --cor-verde-escuro: #1e874b;
+    --cor-azul: #2c7be5;
+    --cor-azul-escuro: #1a5bb8;
+    --cor-cinza-claro: #f8f9fa;
+    --cor-cinza-medio: #e9ecef;
+    --cor-cinza: #bdc3c7;
+    --cor-cinza-escuro: #7f8c8d;
+    --cor-vermelho: #e74c3c;
+    --cor-amarelo: #f39c12;
+    --cor-fundo-claro: #f0f2f5;
+    --cor-fundo-gradiente: #e6e9f0;
+    --cor-fundo-alerta: #fef9e7;
+    --cor-fundo-info: #f0f8ff;
+    --cor-fundo-success: #e8f6ef;
+    --cor-fundo-error: #fbebee;
+    --cor-texto-principal: var(--cor-grafite);
+    --cor-texto-secundario: var(--cor-cinza-escuro);
+}
