@@ -22,7 +22,7 @@ def segmentar_imagem(image_path):
     blur = cv2.GaussianBlur(gray, (5,5), 0)
 
     # Threshold global
-    _, thresh_global = cv2.threshold(blur, 175, 255, cv2.THRESH_BINARY_INV)
+    _, thresh_global = cv2.threshold(blur, 100, 255, cv2.THRESH_BINARY_INV)
 
     # Mais filtros para remover pequenos ruídos 
     kernel = np.ones((3,3), np.uint8)
@@ -58,7 +58,7 @@ def segmentar_imagem(image_path):
     cv2.imwrite(output_path, result)
 
     separar_objetos(output_path)
-    #os.remove(output_path) # Remove a Imagem segmentada
+    os.remove(output_path) # Remove a Imagem segmentada
     return True
 
 

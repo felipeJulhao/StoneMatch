@@ -66,9 +66,9 @@ beta = CFG["weights"]["beta"]
 gamma = CFG["weights"]["gamma"]
 
 def compute_distance(q_resnet, q_color, q_shape, item, alpha=alpha, beta=beta, gamma=gamma):
-    g_resnet = np.array(item["resnet"], dtype="float32")
-    g_color = np.array(item["color"], dtype="float32")
-    g_shape = np.array(item["shape"], dtype="float32")
+    g_resnet = np.array(item["resnet"])
+    g_color = np.array(item["color"])
+    g_shape = np.array(item["shape"])
 
     # Distância ResNet (cosseno)
     d_resnet = 1 - np.dot(q_resnet, g_resnet) / (np.linalg.norm(q_resnet)*np.linalg.norm(g_resnet)+1e-9)
@@ -122,6 +122,7 @@ def index():
 
             clusters_out = defaultdict(list)
 
+            itens = []
             for i, (x, y, w, h) in enumerate(boxes, 1):
                 crop = img_cv[y:y+h, x:x+w]
                 pil_crop = Image.fromarray(cv2.cvtColor(crop, cv2.COLOR_BGR2RGB))
@@ -134,45 +135,66 @@ def index():
                 grupo = detectar_grupo(crop)
 
                 # Comparar só com a galeria desse grupo
+                itens.append({
+                    "file": i,
+                    "crop_img": crop,
+                    "resnet": q_resnet,
+                    "color": q_color,
+                    "shape":q_shape,
+                    "label_manual": grupo,
+                    "box": (x, y, w, h)
+                })
+
+            # ===== PARIDADE =====
+            clusters_out = defaultdict(list)
+
+            for i, item_a in enumerate(itens):
                 distances = []
-                for item in names_gallery:
-                    if item["label_manual"] != grupo:
-                        continue
-                    d = compute_distance(q_resnet, q_color, q_shape, item)
-                    distances.append((item["file"], item["label_manual"], d))
+
+                for j, item_b in enumerate(itens):
+                    if i == j:
+                        continue  # não comparar consigo mesmo
+                    if item_a["label_manual"] != item_b["label_manual"]:
+                        continue  # só comparar dentro do mesmo grupo
+
+                    d = compute_distance(item_a["resnet"], item_a["color"], item_a["shape"], item_b)
+                    distances.append((item_b["file"], item_b["label_manual"], d))
 
                 if distances:
                     distances.sort(key=lambda x: x[2])
                     best_file, best_label, best_dist = distances[0]
-                    top5 = [f"{f}:{d:.3f}" for f,_,d in distances[:5]]
+                    top5 = [f"{f}:{d:.3f}" for f, _, d in distances[:5]]
                 else:
-                    best_file, best_label, best_dist, top5 = "N/A", grupo, 999, []
-
-                clusters_out[grupo].append({
-                    "crop": f"crop_{i:03d}.jpg",
+                    best_file, best_label, best_dist, top5 = "N/A", item_a["label_manual"], 999, []
+          
+                clusters_out[item_a["label_manual"]].append({
+                    "crop": f"crop_{item_a['file']:03d}.jpg",
                     "best_match": best_file,
                     "label_manual": best_label,
                     "distance": round(best_dist, 3),
                     "top5": ";".join(top5)
                 })
 
-                cv2.rectangle(img_cv, (x, y), (x+w, y+h), (0, 255, 0), 2)
-                cv2.putText(img_cv, f"{i}", (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
+                for item in itens:
+                    x, y, w, h = item["box"]
+                    cv2.rectangle(img_cv, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    cv2.putText(img_cv, f"{item['file']}", (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
 
-            # Salvar imagem anotada
-            os.makedirs("static", exist_ok=True)
-            annotated_path = "static/annotated.jpg"
-            cv2.imwrite(annotated_path, img_cv)
 
-            # Salvar resultados
-            rows = []
-            for cid, items in clusters_out.items():
-                for it in items:
-                    rows.append(it)
-            results = pd.DataFrame(rows)
+                # Salvar imagem anotada
+                os.makedirs("static", exist_ok=True)
+                annotated_path = "static/annotated.jpg"
+                cv2.imwrite(annotated_path, img_cv)
 
-            os.makedirs("outputs", exist_ok=True)
-            results.to_csv("outputs/report.csv", index=False, encoding="utf-8")
+                # Salvar CSV
+                rows = []
+                for grupo, item in clusters_out.items():
+                    for it in item:
+                        rows.append(it)
+
+                results = pd.DataFrame(rows)
+                os.makedirs("outputs", exist_ok=True)
+                results.to_csv("outputs/report.csv", index=False, encoding="utf-8")
 
     return render_template("index.html", results=results, annotated=annotated_path)
 

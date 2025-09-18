@@ -49,4 +49,3 @@ def separar_objetos(imagem_path):
         cv2.imwrite(arquivo_out, objeto)
         print(f"Salvo: {arquivo_out}")
 
-separar_objetos('C:/Users/igorb/Desktop/CodeCon/app/funcoes_utilitarias/aaa.jpg')
