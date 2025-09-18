@@ -1,7 +1,8 @@
+
 body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #f0f2f5 0%, #e6e9f0 100%);
-    color: #333;
+    background: linear-gradient(135deg, var(--cor-fundo-claro) 0%, var(--cor-fundo-gradiente) 100%);
+    color: var(--cor-texto-principal);
     line-height: 1.6;
     min-height: 100vh;
 }
@@ -14,14 +15,14 @@ body {
 
 h1 {
     text-align: center;
-    color: #2c3e50;
+    color: var(--cor-texto-principal);
     margin-bottom: 30px;
     font-size: 2.5rem;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
 h2 {
-    color: #2c3e50;
+    color: var(--cor-texto-principal);
     margin-bottom: 20px;
     font-size: 1.6rem;
 }
@@ -39,7 +40,7 @@ input[type="file"] {
     display: inline-block;
     padding: 12px 24px;
     background: var(--cor-dourado);
-    color: white;
+    color: var(--cor-branca);
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
@@ -49,24 +50,19 @@ input[type="file"] {
 }
 
 .custom-file-upload:hover {
-    background: #1a5bb8;
+    background: var(--cor-dourado-escuro);
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(0,0,0,0.15);
 }
 
 /* Card container */
 .card {
-    background: #fff;
+    background: var(--cor-branca);
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     padding: 30px;
     margin-bottom: 30px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
 }
 
 form {
@@ -76,8 +72,8 @@ form {
 .btn-process {
     display: inline-block;
     padding: 14px 28px;
-    background: #6c5ce7;
-    color: white;
+    background: var(--cor-grafite);
+    color: var(--cor-branca);
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -87,13 +83,13 @@ form {
 }
 
 .btn-process:hover:not(:disabled) {
-    background: #5649c0;
+    background: var(--cor-azul-escuro);
     transform: translateY(-2px);
     box-shadow: 0 6px 8px rgba(0,0,0,0.15);
 }
 
 .btn-process:disabled {
-    background: #95a5a6;
+    background: var(--cor-cinza);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -111,10 +107,6 @@ img {
     transition: transform 0.3s ease;
 }
 
-img:hover {
-    transform: scale(1.02);
-}
-
 .results-header {
     display: flex;
     justify-content: space-between;
@@ -129,8 +121,8 @@ img:hover {
     align-items: center;
     gap: 8px;
     padding: 12px 20px;
-    background: #27ae60;
-    color: white;
+    background: var(--cor-verde);
+    color: var(--cor-branca);
     text-decoration: none;
     border-radius: 8px;
     transition: all 0.3s ease;
@@ -138,7 +130,7 @@ img:hover {
 }
 
 .btn-download:hover {
-    background: #1e874b;
+    background: var(--cor-verde-escuro);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
@@ -160,14 +152,14 @@ img:hover {
 
 .filter-group label {
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--cor-texto-principal);
 }
 
 .filter-select {
     padding: 10px 15px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--cor-cinza-claro);
     border-radius: 8px;
-    background: white;
+    background: var(--cor-branca);
     font-size: 14px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
@@ -175,7 +167,7 @@ img:hover {
 
 .filter-select:focus {
     outline: none;
-    border-color: #2c7be5;
+    border-color: var(--cor-azul);
     box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.2);
 }
 
@@ -188,7 +180,7 @@ img:hover {
 }
 
 .stone-card {
-    background: #fff;
+    background: var(--cor-branca);
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     padding: 20px;
@@ -197,7 +189,7 @@ img:hover {
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    border-top: 5px solid #2c7be5;
+    border-top: 5px solid var(--cor-grafite);
 }
 
 .stone-card:hover {
@@ -206,8 +198,8 @@ img:hover {
 }
 
 .stone-card.premium {
-    border-top-color: #f1c40f;
-    background: linear-gradient(135deg, #fff 0%, #fef9e7 100%);
+    border-top-color: var(--cor-dourado);
+    background: linear-gradient(135deg, var(--cor-branca) 0%, var(--cor-fundo-alerta) 100%);
 }
 
 .card-header {
@@ -216,24 +208,23 @@ img:hover {
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--cor-cinza-claro);
 }
 
 .stone-id {
     font-weight: 700;
-    color: #2c7be5;
-    font-size: 1.3rem;
+    color: var(--cor-grafite);
 }
 
 .stone-card.premium .stone-id {
-    color: #f39c12;
+    color: var(--cor-amarelo);
 }
 
 .confidence {
     display: flex;
     align-items: center;
     gap: 5px;
-    background: #f0f8ff;
+    background: var(--cor-fundo-info);
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 0.9rem;
@@ -241,18 +232,18 @@ img:hover {
 }
 
 .high-confidence {
-    background: #e8f6ef;
-    color: #27ae60;
+    background: var(--cor-fundo-success);
+    color: var(--cor-verde);
 }
 
 .medium-confidence {
-    background: #fef9e7;
-    color: #f39c12;
+    background: var(--cor-fundo-alerta);
+    color: var(--cor-amarelo);
 }
 
 .low-confidence {
-    background: #fbebee;
-    color: #e74c3c;
+    background: var(--cor-fundo-error);
+    color: var(--cor-vermelho);
 }
 
 .card-body {
@@ -271,7 +262,7 @@ img:hover {
 
 .info-label {
     font-weight: 600;
-    color: #7f8c8d;
+    color: var(--cor-cinza-escuro);
     display: block;
     margin-bottom: 5px;
     font-size: 0.85rem;
@@ -280,7 +271,7 @@ img:hover {
 }
 
 .info-value {
-    color: #2c3e50;
+    color: var(--cor-texto-principal);
     font-weight: 500;
     font-size: 1.1rem;
 }
@@ -294,26 +285,26 @@ img:hover {
 .dimension {
     flex: 1;
     text-align: center;
-    background: #f8f9fa;
+    background: var(--cor-cinza-claro);
     padding: 10px;
     border-radius: 8px;
     transition: all 0.3s ease;
 }
 
 .dimension:hover {
-    background: #e9ecef;
+    background: var(--cor-cinza-medio);
     transform: translateY(-2px);
 }
 
 .dimension-label {
     font-size: 0.8rem;
-    color: #7f8c8d;
+    color: var(--cor-cinza-escuro);
     margin-bottom: 5px;
 }
 
 .dimension-value {
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--cor-texto-principal);
     font-size: 1.1rem;
 }
 
@@ -331,8 +322,8 @@ img:hover {
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background: #2c7be5;
-    color: white;
+    background: var(--cor-azul);
+    color: var(--cor-branca);
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -341,19 +332,19 @@ img:hover {
 }
 
 .pagination-btn:hover:not(:disabled) {
-    background: #1a5bb8;
+    background: var(--cor-azul-escuro);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .pagination-btn:disabled {
-    background: #bdc3c7;
+    background: var(--cor-cinza);
     cursor: not-allowed;
 }
 
 .page-info {
     font-weight: 600;
-    color: #2c3e50;
+    color: var(--cor-texto-principal);
 }
 
 /* Loading overlay */
@@ -374,8 +365,8 @@ img:hover {
 .loading-spinner {
     width: 50px;
     height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #2c7be5;
+    border: 5px solid var(--cor-cinza-claro);
+    border-top: 5px solid var(--cor-azul);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 20px;
@@ -388,7 +379,7 @@ img:hover {
 
 .loading-overlay p {
     font-size: 1.2rem;
-    color: #2c3e50;
+    color: var(--cor-texto-principal);
     font-weight: 600;
 }
 
