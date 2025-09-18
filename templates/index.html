@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,70 +10,87 @@
     <link rel="stylesheet" href="static/root.css">
     <link rel="stylesheet" href="static/reset.css">
 </head>
+
 <body>
-<div class="container">
-    <h1><i class="fas fa-gem"></i> Stone Matcher</h1>
+    <div class="container">
+        <h1><i class="fas fa-gem"></i> Stone Matcher</h1>
 
-    <div class="card">
-        <form id="uploadForm" enctype="multipart/form-data">
-            <label for="image" class="custom-file-upload">
-                <i class="fas fa-file-upload"></i> Selecione uma imagem para processar
-            </label>
-            <input type="file" id="image" name="image" accept="image/*" required>
-            <button type="submit" id="processBtn" class="btn-process" disabled>
-                <i class="fas fa-cogs"></i> Processar Imagem
-            </button>
-        </form>
-    </div>
-
-    <div id="resultsContainer" class="card results hidden">
-        <h2><i class="fas fa-image"></i> Imagem Processada</h2>
-        <img id="processedImage" src="" alt="Imagem anotada" style="width:100%; border-radius: 8px; margin-bottom: 20px;">
-
-        <div class="results-header">
-            <h2><i class="fas fa-list-alt"></i> Resultados Detalhados</h2>
-            <a href="/download_csv" class="btn-download">
-                <i class="fas fa-download"></i> Baixar CSV
-            </a>
+        <!-- Upload -->
+        <div class="card">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <label for="image" class="custom-file-upload">
+                    <i class="fas fa-file-upload"></i> Selecione uma imagem para processar
+                </label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <button type="submit" id="processBtn" class="btn-process" disabled>
+                    <i class="fas fa-cogs"></i> Processar Imagem
+                </button>
+            </form>
         </div>
 
-        <div class="filters">
-            <div class="filter-group">
-                <label for="sortSelect">Ordenar por:</label>
-                <select id="sortSelect" class="filter-select">
-                    <option value="confidence">Maior Confiança</option>
-                    <option value="area">Maior Área</option>
-                    <option value="id">ID da Pedra</option>
-                </select>
+        <!-- Resultados -->
+        <div id="resultsContainer" class="card results hidden">
+            <h2><i class="fas fa-image"></i> Imagem Processada</h2>
+            <img id="processedImage" src="" alt="Imagem anotada"
+                style="width:100%; border-radius: 8px; margin-bottom: 20px;">
+
+            <div class="results-header">
+                <h2><i class="fas fa-list-alt"></i> Resultados Detalhados</h2>
+                <a href="/download_csv" class="btn-download">
+                    <i class="fas fa-download"></i> Baixar CSV
+                </a>
             </div>
-            <div class="filter-group">
-                <label for="filterSelect">Filtrar por tipo:</label>
-                <select id="filterSelect" class="filter-select">
-                    <option value="all">Todos os tipos</option>
-                </select>
+
+            <!-- Ações -->
+            <div class="actions">
+                <button onclick="exportImages()" class="btn-export">
+                    <i class="fas fa-file-archive"></i> Exportar imagens
+                </button>
+                <button onclick="clearImages()" class="btn-clear">
+                    <i class="fas fa-trash"></i> Limpar imagens
+                </button>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="sortSelect">Ordenar por:</label>
+                    <select id="sortSelect" class="filter-select">
+                        <option value="confidence">Maior Confiança</option>
+                        <option value="area">Maior Área</option>
+                        <option value="id">ID da Pedra</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterSelect">Filtrar por tipo:</label>
+                    <select id="filterSelect" class="filter-select">
+                        <option value="all">Todos os tipos</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Grid -->
+            <div id="resultsGrid" class="results-grid"></div>
+
+            <!-- Paginação -->
+            <div class="pagination">
+                <button id="prevPage" class="pagination-btn" disabled>
+                    <i class="fas fa-chevron-left"></i> Anterior
+                </button>
+                <span id="pageInfo" class="page-info"></span>
+                <button id="nextPage" class="pagination-btn" disabled>
+                    Próxima <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
 
-        <div id="resultsGrid" class="results-grid">
-        </div>
-
-        <div class="pagination">
-            <button id="prevPage" class="pagination-btn" disabled>
-                <i class="fas fa-chevron-left"></i> Anterior
-            </button>
-            <span id="pageInfo" class="page-info"></span>
-            <button id="nextPage" class="pagination-btn" disabled>
-                Próxima <i class="fas fa-chevron-right"></i>
-            </button>
+        <!-- Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p>Analisando pedras...</p>
         </div>
     </div>
 
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <div class="loading-spinner"></div>
-        <p>Analisando pedras...</p>
-    </div>
-</div>
-
-<script src="static/script.js"></script>
+    <script src="static/script.js"></script>
 </body>
 </html>

@@ -1,16 +1,18 @@
-# Diretórios e arquivos
-gallery_dir: "./gallery"
+# Diretórios de saída
+outputs_dir: "./outputs"
+
+# Caminhos dos arquivos gerados pelo build_index.py
 index_path: "./outputs/index.npy"
 names_path: "./outputs/names.json"
 clusters_path: "./outputs/clusters.json"
 
-# Parâmetros do DBSCAN (opcional, se ainda usar clustering)
-dbscan_eps: 0.32
-dbscan_min_samples: 2
+# Parâmetros do DBSCAN (agrupamento entre pedras da mesma imagem)
+dbscan_eps: 0.45        # distância máxima para considerar pedras no mesmo cluster
+dbscan_min_samples: 2   # número mínimo de pedras para formar um cluster
 
 # Detecção de pedras na imagem grande
-min_width: 30
-min_height: 30
+min_width: 25
+min_height: 25
 blur_ksize: 5
 
 # Pesos da similaridade

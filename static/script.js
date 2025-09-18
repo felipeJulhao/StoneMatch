@@ -15,16 +15,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextPageBtn = document.getElementById('nextPage');
     const pageInfo = document.getElementById('pageInfo');
 
+    const summaryContainer = document.createElement("div");
+    summaryContainer.className = "summary-card";
+    resultsContainer.appendChild(summaryContainer);
+
     // --------------------------
-    // Estado da aplicação
+    // Estado
     // --------------------------
     let allStones = [];
     let filteredStones = [];
+    let summaryData = null;
     let currentPage = 1;
     const itemsPerPage = 6;
 
     // --------------------------
-    // Event Listeners
+    // Listeners
     // --------------------------
     imageInput.addEventListener('change', handleFileSelect);
     uploadForm.addEventListener('submit', handleFormSubmit);
@@ -36,11 +41,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // --------------------------
     // Funções
     // --------------------------
-
     function handleFileSelect() {
-        if (imageInput.files && imageInput.files[0]) {
-            processBtn.disabled = false;
-        }
+        processBtn.disabled = !(imageInput.files && imageInput.files[0]);
     }
 
     async function handleFormSubmit(e) {
@@ -51,46 +53,37 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         showLoading();
-
         const formData = new FormData();
         formData.append('image', imageInput.files[0]);
 
         try {
-            const response = await fetch('/api/process', {
-                method: 'POST',
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro na requisição: ${response.statusText}`);
-            }
+            const response = await fetch('/api/process', { method: 'POST', body: formData });
+            if (!response.ok) throw new Error(`Erro na requisição: ${response.statusText}`);
 
             const data = await response.json();
-
-            // Atualiza o estado da aplicação com os dados recebidos
             allStones = data.stones;
-            updateFilterOptions(allStones);
-            applySortingAndFiltering(); // Aplica o sort/filtro inicial
+            summaryData = data.summary;
 
-            // Exibe os resultados
+            updateFilterOptions(allStones);
+            applySortingAndFiltering();
             processedImage.src = data.annotated_image_url;
             resultsContainer.classList.remove('hidden');
+            renderSummary(summaryData);
 
         } catch (error) {
-            console.error("Falha ao processar a imagem:", error);
-            alert("Ocorreu um erro ao processar a imagem. Tente novamente.");
+            console.error("Falha ao processar:", error);
+            alert("Erro ao processar a imagem. Tente novamente.");
         } finally {
             hideLoading();
         }
     }
 
     function updateFilterOptions(stones) {
-        const types = [...new Set(stones.map(s => s.type))]; // Pega tipos únicos
-        filterSelect.innerHTML = '<option value="all">Todos os tipos</option>'; // Reseta
+        const types = [...new Set(stones.map(s => s.type))];
+        filterSelect.innerHTML = '<option value="all">Todos os tipos</option>';
         types.forEach(type => {
             const option = document.createElement('option');
             option.value = type;
-            // Capitaliza a primeira letra para ficar mais bonito
             option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
             filterSelect.appendChild(option);
         });
@@ -98,22 +91,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderStones() {
         resultsGrid.innerHTML = '';
-
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         const stonesToShow = filteredStones.slice(startIndex, endIndex);
 
         if (stonesToShow.length === 0) {
-            resultsGrid.innerHTML = '<p class="no-results">Nenhum resultado encontrado para esta seleção.</p>';
+            resultsGrid.innerHTML = '<p class="no-results">Nenhum resultado encontrado.</p>';
             updatePagination();
             return;
         }
 
-        stonesToShow.forEach(stone => {
-            const card = createStoneCard(stone);
-            resultsGrid.appendChild(card);
-        });
-
+        stonesToShow.forEach(stone => resultsGrid.appendChild(createStoneCard(stone)));
         updatePagination();
     }
 
@@ -125,63 +113,74 @@ document.addEventListener("DOMContentLoaded", function () {
         if (stone.confidence >= 0.85) confidenceClass = 'high-confidence';
         else if (stone.confidence < 0.6) confidenceClass = 'low-confidence';
 
-        // Usando os dados que o backend agora fornece
         card.innerHTML = `
-            <div class="card-header">
-                <div class="stone-id">Pedra #${stone.id}</div>
-                <div class="confidence ${confidenceClass}">${(stone.confidence * 100).toFixed(1)}%</div>
+        <div class="card-header">
+            <div class="stone-id">Pedra #${stone.id}</div>
+            <div class="confidence ${confidenceClass}">${(stone.confidence * 100).toFixed(1)}%</div>
+        </div>
+        <div class="card-body">
+            <div class="stone-images">
+                <img src="${stone.crop_url}" alt="Pedra ${stone.id}" class="stone-crop">
+                ${stone.best_match_url && stone.best_match_url !== "N/A" ? `
+                    <img src="${stone.best_match_url}" alt="Match Pedra ${stone.id}" class="stone-match">`
+                    : `<span class="no-match">Sem match</span>`}
             </div>
-            <div class="card-body">
-                <div class="stone-info">
-                    <span class="info-label">Tipo:</span> ${stone.type}
-                </div>
-                <div class="stone-info">
-                    <span class="info-label">Melhor Match:</span> ${stone.best_match_file.split('/').pop()}
-                </div>
-                 <div class="stone-info">
-                    <span class="info-label">Área:</span> ${stone.area} px²
-                </div>
-                <div class="stone-info">
-                    <span class="info-label">Distância:</span> ${stone.distance}
-                </div>
+            <div class="stone-info">
+                <span class="info-label">Cor Detectada:</span> ${stone.type}
             </div>
-        `;
+            <div class="stone-info">
+                <span class="info-label">Área:</span> ${stone.area} px²
+            </div>
+            <div class="stone-info">
+                <span class="info-label">Distância:</span> ${stone.distance}
+            </div>
+        </div>
+    `;
         return card;
+    }
+
+    function renderSummary(summary) {
+        if (!summary) {
+            summaryContainer.innerHTML = '';
+            return;
+        }
+
+        let html = `
+        <h2><i class="fas fa-chart-pie"></i> Resumo</h2>
+        <p><strong>Total de pedras:</strong> ${summary.total_pedras}</p>
+        <ul class="summary-list">
+    `;
+
+        summary.groups.forEach(group => {
+            html += `
+            <li>
+                <span class="summary-group">${group.group}:</span> 
+                ${group.total} pedras 
+                (área média: ${group.avg_area}px²) 
+                | padrões: ${Object.entries(group.patterns).map(([k, v]) => `${k}: ${v}`).join(", ")}
+            </li>
+        `;
+        });
+
+        html += `</ul>`;
+        summaryContainer.innerHTML = html;
     }
 
     function applySortingAndFiltering() {
         const sortBy = sortSelect.value;
         const filterBy = filterSelect.value;
 
-        filteredStones = filterBy === 'all'
-            ? [...allStones]
-            : allStones.filter(stone => stone.type === filterBy);
-
-        switch (sortBy) {
-            case 'confidence': filteredStones.sort((a, b) => b.confidence - a.confidence); break;
-            case 'area': filteredStones.sort((a, b) => b.area - a.area); break;
-            case 'id': filteredStones.sort((a, b) => a.id - b.id); break;
-        }
+        filteredStones = filterBy === 'all' ? [...allStones] : allStones.filter(s => s.type === filterBy);
+        if (sortBy === 'confidence') filteredStones.sort((a, b) => b.confidence - a.confidence);
+        else if (sortBy === 'area') filteredStones.sort((a, b) => b.area - a.area);
+        else filteredStones.sort((a, b) => a.id - b.id);
 
         currentPage = 1;
         renderStones();
     }
 
-    function goToPrevPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            renderStones();
-        }
-    }
-
-    function goToNextPage() {
-        const maxPage = Math.ceil(filteredStones.length / itemsPerPage);
-        if (currentPage < maxPage) {
-            currentPage++;
-            renderStones();
-        }
-    }
-
+    function goToPrevPage() { if (currentPage > 1) { currentPage--; renderStones(); } }
+    function goToNextPage() { if (currentPage < Math.ceil(filteredStones.length / itemsPerPage)) { currentPage++; renderStones(); } }
     function updatePagination() {
         const maxPage = Math.ceil(filteredStones.length / itemsPerPage) || 1;
         pageInfo.textContent = `Página ${currentPage} de ${maxPage}`;
@@ -189,11 +188,21 @@ document.addEventListener("DOMContentLoaded", function () {
         nextPageBtn.disabled = currentPage === maxPage;
     }
 
-    function showLoading() {
-        loadingOverlay.classList.remove('hidden');
+    function showLoading() { loadingOverlay.classList.remove('hidden'); }
+    function hideLoading() { loadingOverlay.classList.add('hidden'); }
+
+    // --------------------------
+    // Botões Exportar / Limpar
+    // --------------------------
+    window.exportImages = async function () {
+        if (!confirm("Deseja exportar as imagens?")) return;
+        window.location.href = "/export_images";
     }
 
-    function hideLoading() {
-        loadingOverlay.classList.add('hidden');
+    window.clearImages = async function () {
+        if (!confirm("Deseja realmente limpar todas as imagens e resultados?")) return;
+        await fetch("/clear_outputs", { method: "POST" });
+        alert("Imagens apagadas.");
+        location.reload();
     }
 });
