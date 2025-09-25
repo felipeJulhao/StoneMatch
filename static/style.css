@@ -374,24 +374,10 @@ img {
     color: var(--cor-branca);
 }
 
-.btn-export:hover {
-    background: var(--cor-azul-escuro);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-}
-
-/* Limpar */
 .btn-clear {
     background: var(--cor-vermelho);
     color: var(--cor-branca);
 }
-
-.btn-clear:hover {
-    background: var(--cor-vermelho-escuro);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-}
-
 
 .loading-overlay {
     position: fixed;
